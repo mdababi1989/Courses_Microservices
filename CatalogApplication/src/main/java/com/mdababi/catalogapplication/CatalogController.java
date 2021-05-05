@@ -2,15 +2,22 @@ package com.mdababi.catalogapplication;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
+@AllArgsConstructor
 public class CatalogController {
 
-    @Autowired
     private EurekaClient client;
 
     @RequestMapping("/")
@@ -40,11 +47,15 @@ public class CatalogController {
         String courseAppURL = instanceInfo.getHomePageUrl();
         courseAppURL = courseAppURL + "/1";
         RestTemplate restTemplate = new RestTemplate();
-
         Course course = restTemplate.getForObject(courseAppURL, Course.class);
-        if (course != null)
-            return ("Our first course is " + course.getCourseName());
-        else return ("No course added yet");
+        if (course != null) {
+            instanceInfo = client.getNextServerFromEureka("user-service", false);
+            String userAppUrl = instanceInfo.getHomePageUrl() + "/course/" + course.getCourseId();
+            User[] users = restTemplate.getForEntity(userAppUrl, User[].class).getBody();
+            String userNames = Arrays.stream(users).map(User::getUsername).collect(Collectors.joining(" ++ "));
+            return ("Our first course is ****" + course.getCourseName() +"**** and enrolled users are ****"+ userNames +"****" );
+        }
+        return ("No course added yet");
     }
 
 }
