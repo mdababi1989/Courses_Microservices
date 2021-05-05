@@ -9,7 +9,7 @@ A simple microservice application to manage a list of courses from a mysql datab
 It uses Spring Data to implement a JPA `CourseRepository` and Spring Rest to provide a REstFul interface to courses `CourseController`.
 It registers itself with the discovery-server at start-up via `@EnableDiscoveryClient` using its application name. 
 This annotation enables service registration and discovery.
-
+This application fetch its server port from the config server.
 # Users Application
 A simple microservice application to manage a list of users and their courses from a mysql database.
 It uses Spring Data to implement a JPA `UserRepository` and Spring Rest to provide a REstFul interface to users `UserController`.
