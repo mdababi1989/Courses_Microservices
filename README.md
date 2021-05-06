@@ -25,6 +25,11 @@ The configuration specifies that this is a server and stops the server process t
 
 `eureka.client.fetch-registry=false`
 
+# Gateway Server
+This server uses Spring Cloud Gateway to provide a simple route for all microservices (Implemented for the catalog and course microservices).
+Spring Cloud Gateway is a library for building an API gateway. It is intended to sit between a requester and a resource that’s being requested, 
+where it intercepts, analyzes, and modifies every request. That means you can route requests based on their context.
+
 # Config Server
 This application contains remote configurations for applications using the Spring Cloud Config package.
 The idea is that our programs can go to find their configuration parameters in an external place, in such a way that our applications are easily parameterizable.
